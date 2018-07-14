@@ -11,6 +11,8 @@ Clients interface to the Redis proxy through HTTP, with the Redis “GET” comm
 Single backing instance
 Each instance of the proxy service is associated with a single Redis service instance called the “backing Redis”. The address of the backing Redis is configured at proxy startup.
 
+ --> Time: 1hr
+
 Cached GET
 A GET request, directed at the proxy, returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. If the local cache does not contain a value for the specified key, it fetches the value from the backing Redis instance, using the Redis GET command, and stores it in the local cache, associated with the specified key.
 

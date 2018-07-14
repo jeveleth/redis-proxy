@@ -12,3 +12,5 @@ services:
      - redis
   redis:
     image: "redis:alpine"
+    # volumes:
+    # - ./redis.conf:./config/redis.conf #TODO: create this conf file
