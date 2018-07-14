@@ -1,15 +1,14 @@
-version: '3'
+version: '2'
 services:
   web:
     build: .
     ports:
     - "8080:8080"
-    # env_file:
-    # - .env
-    # some of this config will need more consideration
+    environment:
+      REDIS_URL: redis:6379
+      REDIS_PW: "" # Ideally, this would be configured with a secure secrets store like Vault or Conjur
+      DB_VALUE: 0
     links:
-     - db
-  db:
+     - redis
+  redis:
     image: "redis:alpine"
-    ports:
-     - "6379:6379"

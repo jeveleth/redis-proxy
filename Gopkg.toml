@@ -25,10 +25,10 @@
 #   unused-packages = true
 
 
+[[constraint]]
+  name = "github.com/go-redis/redis"
+  version = "6.12.0"
+
 [prune]
   go-tests = true
   unused-packages = true
-
-[[constraint]]
-  name = "github.com/gomodule/redigo"
-  version = "2.0.0"
