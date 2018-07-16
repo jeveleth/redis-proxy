@@ -1,16 +1,15 @@
-version: '2'
+version: '3'
 services:
-  web:
+  proxy:
     build: .
     ports:
     - "8080:8080"
     environment:
-      REDIS_URL: redis:6379
       REDIS_PW: "" # Ideally, this would be configured with a secure secrets store like Vault or Conjur
       DB_VALUE: 0
     links:
      - redis
   redis:
     image: "redis:alpine"
-    # volumes:
-    # - ./redis.conf:./config/redis.conf #TODO: create this conf file
+    ports:
+    - "6379:6379"

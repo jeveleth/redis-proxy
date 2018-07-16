@@ -1,8 +1,21 @@
 # segment-redis-proxy
 
+
+Running with flags
+```go run *.go -help```
+
+
+
+
+
+
+
+
+
 Segment Assignment
 
 TODO: 
+ --> Time: 1hr
 The table below defines requirements that the proxy has to meet and against which the implementation would be measured. It allows the proxy to be used as a simple read-through cache. When deployed in this fashion, it is assumed that all writes are directed to the backing Redis instance, bypassing the proxy. 
 
 HTTP web service
@@ -11,19 +24,10 @@ Clients interface to the Redis proxy through HTTP, with the Redis “GET” comm
 Single backing instance
 Each instance of the proxy service is associated with a single Redis service instance called the “backing Redis”. The address of the backing Redis is configured at proxy startup.
 
- --> Time: 1hr
+
 
 Cached GET
 A GET request, directed at the proxy, returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. If the local cache does not contain a value for the specified key, it fetches the value from the backing Redis instance, using the Redis GET command, and stores it in the local cache, associated with the specified key.
-
-Global expiry
-Entries added to the proxy cache are expired after being in the cache for a time duration that is globally configured (per instance). After an entry is expired, a GET request will act as if the value associated with the key was never stored in the cache.
-
-LRU eviction
-Once the cache fills to capacity, the least recently used (i.e. read) key is evicted each time a new key needs to be added to the cache.
-
-Fixed key size
-The cache capacity is configured in terms of number of keys it retains.
 
 Sequential concurrent processing
 Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
@@ -44,13 +48,11 @@ The software build and tests pass on a modern Linux distribution or Mac OS insta
     * make
     * docker
     * docker-compose
-    --> particularly important if you don't want to have to set up a go env or php
     * Bash
 2. The system can access DockerHub over the internet.
         
 Single-click build and test
-After extracting the source code archive, or cloning it from a Git repo, entering the top-level project directory and executing
-will build the code and run all the relevant tests. Apart from the downloading and manipulation of docker images and containers, no changes are made to the host system outside the top-level directory of the project. The build and test should be fully repeatable and not requires any of software installed on the host system, with the exception of anything specified explicitly in the requirement.
+After extracting the source code archive, or cloning it from a Git repo, entering the top-level project directory and executing will build the code and run all the relevant tests. Apart from the downloading and manipulation of docker images and containers, no changes are made to the host system outside the top-level directory of the project. The build and test should be fully repeatable and not requires any of software installed on the host system, with the exception of anything specified explicitly in the requirement.
  
 Documentation
 The software includes a README file with: 

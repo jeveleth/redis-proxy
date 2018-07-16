@@ -28,9 +28,18 @@
   revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
   version = "v1.6.2"
 
+[[projects]]
+  branch = "master"
+  name = "github.com/hashicorp/golang-lru"
+  packages = [
+    ".",
+    "simplelru"
+  ]
+  revision = "0fb14efe8c47ae851c0034ed7a448854d3d34cf3"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d59bb2fe3098913c32bf9421e9dd3e7e320091f7b445a9474ceb39bd4e84fe6e"
+  inputs-digest = "cd664b1cc669edfc1a84d9ed2ee6e774af4713ce7b45bd723698dbb9f57a2db9"
   solver-name = "gps-cdcl"
   solver-version = 1

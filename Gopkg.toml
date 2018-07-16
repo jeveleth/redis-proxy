@@ -29,10 +29,14 @@
   name = "github.com/go-redis/redis"
   version = "6.12.0"
 
-[prune]
-  go-tests = true
-  unused-packages = true
-
 [[constraint]]
   name = "github.com/gorilla/mux"
   version = "1.6.2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/hashicorp/golang-lru"
+
+[prune]
+  go-tests = true
+  unused-packages = true
