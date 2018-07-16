@@ -8,15 +8,10 @@ docker-proxy-config:
 	docker-compose up -d
 	docker exec -it redis-proxy_proxy_1 ./proxy -help
 
-# If you do *not* have Go set up on your machine
+# To enter an interactive environment with Go
 docker-proxy: local-redis
 	docker-compose up -d
 	docker exec -it redis-proxy_proxy_1 bash
-
-# If you have Go set up on your machine
-# local-proxy:
-# 	go build -v -o proxy .
-# 	./proxy -redis-addr localhost:6379
 
 cleanup:
 	docker-compose down
@@ -28,4 +23,3 @@ cleanup:
 
 redis-cli: local-redis
 	docker exec -it redis-proxy_redis_1 redis-cli
-

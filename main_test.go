@@ -31,6 +31,8 @@ func TestHandlerWelcomeMessage(t *testing.T) {
 	if actual != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
 	}
+	tearDownRedis()
+	tearDownCache()
 }
 
 func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
@@ -63,6 +65,7 @@ func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
 		}
 	}
+	tearDownRedis()
 	tearDownCache()
 }
 
@@ -94,6 +97,8 @@ func TestGetValueFromLocalCacheSuccess(t *testing.T) {
 			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
 		}
 	}
+	tearDownRedis()
+	tearDownCache()
 }
 
 func TestCacheEvictsWithLRU(t *testing.T) {
@@ -117,6 +122,8 @@ func TestCacheEvictsWithLRU(t *testing.T) {
 			t.Errorf("key %v should be evicted", key)
 		}
 	}
+	tearDownRedis()
+	tearDownCache()
 }
 
 func setupKeysInCache(t *testing.T) {
@@ -136,6 +143,10 @@ func setupKeysInCache(t *testing.T) {
 
 func tearDownCache() {
 	localCache.client.Purge()
+}
+
+func tearDownRedis() {
+	myRedisClient.client.FlushDB()
 }
 
 // TODO: Test that getting value:
