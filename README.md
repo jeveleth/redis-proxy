@@ -1,18 +1,32 @@
 # redis-proxy
 
 
-# Getting started
+Documentation
+The software includes a README file with:
+* High-level architecture overview.
+* What the code does.
+* Algorithmic complexity of the cache operations.
+* Instructions for how to run the proxy and tests.
+* How long you spent on each part of the project.
+* A list of the requirements that you did not implement and the reasons for omitting them.
+
+## Getting started
+To build and test, according to the ```Single-click build and test``` requirement. Open a terminal session and run:
 
     git clone git@github.com:jeveleth/redis-proxy.git
-    make test
+    make test # This builds the proxy and runs the tests
 
-# Configurable
+# Running your own proxy
+ Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Then run ```./proxy -help```, to see what you can configure. To run the proxy, run ```./proxy``` with any optional flags.
 
-Running with flags
-```go run *.go -help```
+ As an example you can test the service by doing the following (all within the root directory of the project):
+  1. (Session 1) Open one terminal session and run: ```make docker-proxy```. Once inside the bash prompt, run ```./proxy -proxy-port 9000```.
+  2. (Session 2) Open a separate terminal session and run ```curl localhost:9000/getval/key22```. You should *not* see any value.
+    <!-- TODO: Ensure tests tear down keys from Redis and local cache. Currently, it does not.-->
+  3. (Session 3) Open an separate terminal session and run ```make redis-cli```, which will drop you into an interactive session with the redis server. For this example, type ```set key22 value22```. Go back to session 2 and run the curl command again, like so: ```bash-4.4# curl localhost:9000/getval/key22```. You should see a response like: ```From Redis: key22 => value22bash-4.4#```. Run the curl command again, and you should see a response like ```From cache: key22 => value1bash-4.4```.
 
-
-
+# Running the tests
+Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Run ```go test -v```.
 
 
 
@@ -32,19 +46,11 @@ Single backing instance
 Each instance of the proxy service is associated with a single Redis service instance called the “backing Redis”. The address of the backing Redis is configured at proxy startup.
 
 
-
 Cached GET
 A GET request, directed at the proxy, returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. If the local cache does not contain a value for the specified key, it fetches the value from the backing Redis instance, using the Redis GET command, and stores it in the local cache, associated with the specified key.
 
 Sequential concurrent processing
 Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
-
-Configuration
-The following parameters are configurable at the proxy startup:
-    * Address of the backing Redis
-    * Cache expiry time
-    * Capacity (number of keys)
-    * TCP/IP port number the proxy listens on
 
 System tests
     Automated systems tests confirm that the end-to-end system functions as specified.
