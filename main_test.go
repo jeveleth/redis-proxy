@@ -139,10 +139,8 @@ func tearDownCache() {
 }
 
 // TODO: Test that getting value:
-// --> gets a value from the cache
-
 // --> evicts a key with expiry time
-// 	Fixed key size
+// --> Fixed key size
 // 	Sequential concurrent processing
 // 	Configuration
 // 	Parallel concurrent processing

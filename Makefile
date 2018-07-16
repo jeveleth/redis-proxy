@@ -1,5 +1,6 @@
-test: 
-	docker-compose up -d --build
+test: local-redis	
+	docker build .
+	# docker-compose up -d --build
 
 local-redis:
 	docker-compose up -d redis

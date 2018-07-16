@@ -1,12 +1,11 @@
 FROM golang:latest
+
 WORKDIR /go/src/github.com/jeveleth/segment-redis-proxy
 COPY . .
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
     dep ensure && \
     CGO_ENABLED=0 GOARCH=amd64 GOOS=linux  go build -v -o proxy . && \
-    go test -redis-addr localhost:6379 -cache-capacity 20
-
-# TODO: Get tests talking to redis instance
+    go test -redis-addr host.docker.internal:6379 -v
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates && \
     apk update && apk add bash
