@@ -4,7 +4,7 @@ COPY . .
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && \
     dep ensure && \
     CGO_ENABLED=0 GOARCH=amd64 GOOS=linux  go build -v -o proxy . && \
-    go test -redis-addr localhost:6379 -cache-capacity 2
+    go test -redis-addr localhost:6379 -cache-capacity 20
 
 # TODO: Get tests talking to redis instance
 FROM alpine:latest  

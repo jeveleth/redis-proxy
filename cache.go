@@ -42,10 +42,8 @@ func newCache(cacheCapacity int) *cache {
 func (c *cache) getCVal(key string) (interface{}, string) {
 	res, ok := c.client.Get(key)
 	if ok == true {
-		log.Printf("Local cache. Key: %s, Val: %v.", key, res)
 		return res, ""
 	}
-	log.Printf("Local cache can't find the Key: %v.", key)
 	return nil, ""
 }
 

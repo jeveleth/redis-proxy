@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -24,7 +25,7 @@ func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 	// Otherwise call Redis
 	switch v := val.(type) {
 	case string:
-		w.Write([]byte(v))
+		w.Write([]byte(fmt.Sprintf("From cache: %v => %v", vars["key"], v)))
 	case nil:
 		val, err := myRedisClient.getRVal(vars["key"])
 		if err != nil {
@@ -36,7 +37,7 @@ func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// If Redis returns a key, then set value to local cache.
 			localCache.setCVal(vars["key"], val)
-			w.Write([]byte(val))
+			w.Write([]byte(fmt.Sprintf("From Redis: %v => %v", vars["key"], val)))
 		}
 	}
 

@@ -35,15 +35,14 @@ func TestHandlerWelcomeMessage(t *testing.T) {
 
 func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 	tt := []struct {
-		routeKey   string
-		routeVal   string
-		shouldPass bool
+		routeKey string
+		routeVal string
 	}{
-		{"key1", "val1", true},
-		{"key2", "val2", false},
-		{"key3", "val3", false},
-		{"key4", "val4", false},
-		{"key5", "val5", false},
+		{"key1", "val1"},
+		{"key2", "val2"},
+		{"key3", "val3"},
+		{"key4", "val4"},
+		{"key5", "val5"},
 	}
 
 	for _, tc := range tt {
@@ -58,23 +57,91 @@ func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 		router := mux.NewRouter()
 		router.HandleFunc("/getval/{key}", GetValueFromKeyHandler)
 		router.ServeHTTP(rr, req)
-		expected := tc.routeVal
+		expected := fmt.Sprintf("From Redis: %v => %v", tc.routeKey, tc.routeVal)
+		actual := rr.Body.String()
+		if actual != expected {
+			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
+		}
+	}
+	tearDownCache()
+}
+
+func TestGetValueFromLocalCacheSuccess(t *testing.T) {
+	setupKeysInCache(t)
+
+	nt := []struct {
+		routeKey string
+		routeVal string
+	}{
+		{"key1", "val1"},
+		{"key2", "val2"},
+	}
+
+	for _, tc := range nt {
+		path := fmt.Sprintf("/getval/%s", tc.routeKey)
+		req, err := http.NewRequest("GET", path, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		rr := httptest.NewRecorder()
+		router := mux.NewRouter()
+		router.HandleFunc("/getval/{key}", GetValueFromKeyHandler)
+		router.ServeHTTP(rr, req)
+		expected := fmt.Sprintf("From cache: %v => %v", tc.routeKey, tc.routeVal)
 		actual := rr.Body.String()
 		if actual != expected {
 			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
 		}
 	}
 }
-func TestGetValueFromLocalCacheSuccess(t *testing.T) {
-	// TODO: Why is local cache not getting value from Redis in test?
-	// --> cache gets cleared at test end
+
+func TestCacheEvictsWithLRU(t *testing.T) {
+	testCache := newCache(5)
+	nt := []struct {
+		routeKey string
+		routeVal string
+	}{
+		{"testKey1", "testVal1"},
+		{"testKey2", "testVal2"},
+		{"testKey3", "testVal3"},
+		{"testKey4", "testVal4"},
+		{"testKey5", "testVal5"},
+		{"testKey6", "testVal6"},
+	}
+	for _, tc := range nt {
+		testCache.client.Add(tc.routeKey, tc.routeVal)
+	}
+	for _, key := range testCache.client.Keys() {
+		if key == "testKey1" {
+			t.Errorf("key %v should be evicted", key)
+		}
+	}
+}
+
+func setupKeysInCache(t *testing.T) {
+	tt := []struct {
+		routeKey string
+		routeVal string
+	}{
+		{"key1", "val1"},
+		{"key2", "val2"},
+	}
+
+	for _, tc := range tt {
+		localCache.setCVal(tc.routeKey, tc.routeVal)
+	}
+
+}
+
+func tearDownCache() {
+	localCache.client.Purge()
 }
 
 // TODO: Test that getting value:
-// --> gets a value from redis if cache is empty
 // --> gets a value from the cache
+
 // --> evicts a key with expiry time
-// --> evicts a key with lru
 // 	Fixed key size
 // 	Sequential concurrent processing
 // 	Configuration
