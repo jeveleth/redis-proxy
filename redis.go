@@ -20,27 +20,24 @@ func newRedisClient(redisAddr string) *redisClient {
 	return &redisClient{client: client}
 }
 
+// setRVal sets a value in Redis from a given key
 func (r *redisClient) setRVal(key string, value string) {
 	err := r.client.Set(key, value, 0).Err()
 	if err != nil {
-		log.Printf("error setting value %v for key %v. error is: %#v", value, key, err)
+		log.Printf("Error setting Value: %v for Key: %v. Error is: %v.", value, key, err)
 	}
-	log.Printf("Setting %v to store %v", key, value)
+	log.Printf("Setting %v to store %v.", key, value)
 }
 
+// getRVal returns a key's value from Redis; otherwise it returns a nil error
 func (r *redisClient) getRVal(key string) (string, error) {
-	// Note: As the assignment asks for only a Redis GET,
-	// I'm dealing only with retrieving strings,
-	// not sets, lists, hashes, or other Redis types.
+	// Note: As the project seeks only a Redis GET,
+	// This retrieves only strings, not sets, lists, hashes, or other Redis types.
 	val, err := r.client.Get(key).Result()
-	log.Printf("checking redis for getting value for key %v.", key)
-
-	// if key == nil {
-	// log.Printf("key is empty key %v.", key)
-	// }
+	log.Printf("Checking Redis for Key: %v.", key)
 
 	if err != nil {
-		log.Printf("error getting value for key %v. error is: %#v", key, err)
+		log.Printf("Redis can't find Key: %v. Error is: %v.", key, err)
 		return "", err
 	}
 	return val, nil

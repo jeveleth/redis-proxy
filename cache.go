@@ -33,40 +33,23 @@ func newCache(cacheCapacity int) *cache {
 	// TODO: Error handling
 	l, err := lru.New(cacheCapacity)
 	if err != nil {
-		log.Printf("Error creating cache client %#v", err)
+		log.Printf("Error creating cache client. Error is: %v.", err)
 	}
 	return &cache{client: l}
 }
 
-// getCVal checks the local cache for a key's value.
-// If it fails, it fetches the value from the backing Redis instance,
-// storing it in the local cache, associated with the specified key.
-func (c *cache) getCVal(key string) interface{} {
-	// log.Printf("DEBUG ==> checking cache for key %s.", key)
-	res, _ := c.client.Get(key)
-	// if ok != true {
-	// 	// TODO: Error handle better
-	// 	log.Printf("error getting value from local cache %#v", ok)
-	// }
-	if res != nil {
-		log.Printf("Local cache => key: %s and val: %v.", key, res)
-		return res
+// getCVal retrieves the key's value from the local cache.
+func (c *cache) getCVal(key string) (interface{}, string) {
+	res, ok := c.client.Get(key)
+	if ok == true {
+		log.Printf("Local cache. Key: %s, Val: %v.", key, res)
+		return res, ""
 	}
-	// TODO: check if error is because service is down or
-	// if it's because key doesn't exist.
-	// If latter, return empty string
-	if len(key) > 0 {
-	}
-
-	val, err := myRedisClient.getRVal(key)
-	if err != nil {
-		log.Printf("error getting redis value in cache %#v", err)
-	}
-	c.setCVal(key, val)
-	return val
+	log.Printf("Local cache can't find the Key: %v.", key)
+	return nil, ""
 }
 
 func (c *cache) setCVal(key string, val string) {
 	c.client.Add(key, val)
-	//  mutex me
+	// TODO: mutex me
 }

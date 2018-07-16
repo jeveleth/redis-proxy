@@ -1,7 +1,9 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -11,32 +13,29 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Welcome to the proxy!"))
 }
 
-// setValueFromKeyHandler will SET value in Redis
-// Although this isn't explicitly asked for, it would be difficult to test
-// GETs without confirming SETs. This should work only in tests
-// func setValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	myRedisClient.setRVal(vars["key"], vars["value"])
-// }
-
-// GetValueFromKeyHandler will GET value from Redis
+// GetValueFromKeyHandler will GET value from local cache.
+// If it fails, it fetches the value from the backing Redis instance,
+// storing it in the local cache, associated with the specified key.
 func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	val := localCache.getCVal(vars["key"])
-	// log.Printf("DEBUG ==> hello getting %v, vars %v", vars["key"], val)
-	// if non-empty, return value
-	// If empty, call getVal()
-	// If calling getVal(), then call cacheSetVal(),
-	// return value
-	// val, err := myRedisClient.getRVal
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusServiceUnavailable)
-	// }
-
+	val, _ := localCache.getCVal(vars["key"])
+	// If local cache has the key, return value
+	// Otherwise call Redis
+	if val == nil {
+		val, err := myRedisClient.getRVal(vars["key"])
+		if err != nil {
+			log.Printf("Error getting value from Redis. Error is: %v.", err)
+			// Sad hack to check if Redis connection is down
+			if strings.Contains(err.Error(), "connection refused") {
+				http.Error(w, err.Error(), http.StatusServiceUnavailable)
+			}
+		} else {
+			// If Redis returns a key, then set value to local cache.
+			localCache.setCVal(vars["key"], val)
+		}
+	}
 	switch v := val.(type) {
 	case string:
-		// return v
 		w.Write([]byte(v))
 	}
-	// return w.Write([]byte(v))
 }

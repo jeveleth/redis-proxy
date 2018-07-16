@@ -22,6 +22,5 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)
 	r.HandleFunc("/getval/{key}", GetValueFromKeyHandler)
-	// r.HandleFunc("/setter/{key:[0-9a-zA-Z]+}/{value}", setValueFromKeyHandler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", proxyPort), r))
 }

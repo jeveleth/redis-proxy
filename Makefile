@@ -1,6 +1,5 @@
 test: 
 	docker-compose up -d --build
-	docker exec -it segment-redis-proxy_proxy_1 bash test.sh
 
 local-redis:
 	docker-compose up -d redis
