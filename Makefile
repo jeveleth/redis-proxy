@@ -1,23 +1,16 @@
 test: local-redis	
 	docker build .
-	# docker-compose up -d --build
 
 local-redis:
 	docker-compose up -d redis
 
 local-proxy:
-	go run *.go -redis-addr localhost:6379
+	go build -v -o proxy .
+	./proxy -redis-addr localhost:6379
 
-nuclear:
-	docker system prune -f -a
+cleanup:
+	docker system prune -f
 	docker volume prune -f
 
-redis-cli:
+redis-cli: local-redis
 	docker exec -it segment-redis-proxy_redis_1 redis-cli
-
-# docker-proxy:
-# 	docker exec -it segment-redis-proxy_proxy_1 ./proxy -redis-addr localhost:6379
-tests:
-	# create a test yaml to run docker like following
-	go test -redis-addr localhost:6379 -cache-capacity 2
-	
