@@ -1,4 +1,4 @@
-test: local-redis	
+test: local-redis
 	docker build .
 
 local-redis:
