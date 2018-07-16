@@ -18,10 +18,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // storing it in the local cache, associated with the specified key.
 func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+
 	val, _ := localCache.getCVal(vars["key"])
 	// If local cache has the key, return value
 	// Otherwise call Redis
-	if val == nil {
+	switch v := val.(type) {
+	case string:
+		w.Write([]byte(v))
+	case nil:
 		val, err := myRedisClient.getRVal(vars["key"])
 		if err != nil {
 			log.Printf("Error getting value from Redis. Error is: %v.", err)
@@ -32,10 +36,8 @@ func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// If Redis returns a key, then set value to local cache.
 			localCache.setCVal(vars["key"], val)
+			w.Write([]byte(val))
 		}
 	}
-	switch v := val.(type) {
-	case string:
-		w.Write([]byte(v))
-	}
+
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func TestHandler(t *testing.T) {
+func TestHandlerWelcomeMessage(t *testing.T) {
 	req, err := http.NewRequest("GET", "", nil)
 
 	if err != nil {
@@ -33,10 +33,7 @@ func TestHandler(t *testing.T) {
 	}
 }
 
-func TestGetValueFromKeyHandler(t *testing.T) {
-	myRedisClient.setRVal("key1", "val1")
-
-	// TODO: Why is local cache not getting value from Redis in test?
+func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 	tt := []struct {
 		routeKey   string
 		routeVal   string
@@ -44,9 +41,13 @@ func TestGetValueFromKeyHandler(t *testing.T) {
 	}{
 		{"key1", "val1", true},
 		{"key2", "val2", false},
+		{"key3", "val3", false},
+		{"key4", "val4", false},
+		{"key5", "val5", false},
 	}
 
 	for _, tc := range tt {
+		myRedisClient.setRVal(tc.routeKey, tc.routeVal)
 		path := fmt.Sprintf("/getval/%s", tc.routeKey)
 		req, err := http.NewRequest("GET", path, nil)
 		if err != nil {
@@ -57,7 +58,16 @@ func TestGetValueFromKeyHandler(t *testing.T) {
 		router := mux.NewRouter()
 		router.HandleFunc("/getval/{key}", GetValueFromKeyHandler)
 		router.ServeHTTP(rr, req)
+		expected := tc.routeVal
+		actual := rr.Body.String()
+		if actual != expected {
+			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
+		}
 	}
+}
+func TestGetValueFromLocalCacheSuccess(t *testing.T) {
+	// TODO: Why is local cache not getting value from Redis in test?
+	// --> cache gets cleared at test end
 }
 
 // TODO: Test that getting value:

@@ -26,7 +26,7 @@ func (r *redisClient) setRVal(key string, value string) {
 	if err != nil {
 		log.Printf("Error setting Value: %v for Key: %v. Error is: %v.", value, key, err)
 	}
-	log.Printf("Setting %v to store %v.", key, value)
+	// log.Printf("Setting %v to store %v.", key, value)
 }
 
 // getRVal returns a key's value from Redis; otherwise it returns a nil error
@@ -34,11 +34,12 @@ func (r *redisClient) getRVal(key string) (string, error) {
 	// Note: As the project seeks only a Redis GET,
 	// This retrieves only strings, not sets, lists, hashes, or other Redis types.
 	val, err := r.client.Get(key).Result()
-	log.Printf("Checking Redis for Key: %v.", key)
+	// log.Printf("Checking Redis for Key: %v.", key)
 
 	if err != nil {
 		log.Printf("Redis can't find Key: %v. Error is: %v.", key, err)
 		return "", err
 	}
+	// log.Printf("Redis found Key: %v, Val: %v.", key, val)
 	return val, nil
 }
