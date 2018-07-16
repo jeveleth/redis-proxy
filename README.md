@@ -1,5 +1,12 @@
-# segment-redis-proxy
+# redis-proxy
 
+
+# Getting started
+
+    git clone git@github.com:jeveleth/redis-proxy.git
+    make test
+
+# Configurable
 
 Running with flags
 ```go run *.go -help```
@@ -14,9 +21,9 @@ Running with flags
 
 Segment Assignment
 
-TODO: 
+TODO:
  --> Time: 1hr
-The table below defines requirements that the proxy has to meet and against which the implementation would be measured. It allows the proxy to be used as a simple read-through cache. When deployed in this fashion, it is assumed that all writes are directed to the backing Redis instance, bypassing the proxy. 
+The table below defines requirements that the proxy has to meet and against which the implementation would be measured. It allows the proxy to be used as a simple read-through cache. When deployed in this fashion, it is assumed that all writes are directed to the backing Redis instance, bypassing the proxy.
 
 HTTP web service
 Clients interface to the Redis proxy through HTTP, with the Redis “GET” command mapped to the HTTP “GET” method. Note that the proxy still uses the Redis protocol to communicate with the backend Redis server.
@@ -38,7 +45,7 @@ The following parameters are configurable at the proxy startup:
     * Cache expiry time
     * Capacity (number of keys)
     * TCP/IP port number the proxy listens on
-    
+
 System tests
     Automated systems tests confirm that the end-to-end system functions as specified.
 
@@ -50,16 +57,16 @@ The software build and tests pass on a modern Linux distribution or Mac OS insta
     * docker-compose
     * Bash
 2. The system can access DockerHub over the internet.
-        
+
 Single-click build and test
 After extracting the source code archive, or cloning it from a Git repo, entering the top-level project directory and executing will build the code and run all the relevant tests. Apart from the downloading and manipulation of docker images and containers, no changes are made to the host system outside the top-level directory of the project. The build and test should be fully repeatable and not requires any of software installed on the host system, with the exception of anything specified explicitly in the requirement.
- 
+
 Documentation
-The software includes a README file with: 
+The software includes a README file with:
 * High-level architecture overview.
 * What the code does.
-* Algorithmic complexity of the cache operations. 
-* Instructions for how to run the proxy and tests. 
+* Algorithmic complexity of the cache operations.
+* Instructions for how to run the proxy and tests.
 * How long you spent on each part of the project.
 * A list of the requirements that you did not implement and the reasons for omitting them.
 
@@ -74,7 +81,7 @@ impacting the functional behaviour of the proxy. When multiple clients make conc
 
 Redis client protocol
 Clients interface to the Redis proxy through a subset of the Redis protocol (as opposed to using the HTTP protocol). The proxy should implement the parts of the Redis protocol that is required to meet this specification.
- 
+
  DONE:
  Makefile
  Git repo
