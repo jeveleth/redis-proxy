@@ -4,7 +4,7 @@
 ![alt text](ProxyArchitecture.png "Proxy Architecture")
 
 ### What the code does
-The code spins up an HTTP proxy that runs a read-through cache and connects to a single-instance "backing Redis." 
+The code spins up an HTTP proxy that runs a read-through cache and connects to a single-instance "backing Redis."
 A GET request to the proxy returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. Otherwise, the proxy fetches the value from Redis, via the Redis GET command, and stores it in the local cache, associated with the specified key. If the key/value cannot be found, the proxy returns an empty string.
 
 Any writes to the Redis instance bypass the proxy. In this case, you need to open an interactive Redis session (see **Session 3** below) to write to Redis.
@@ -14,9 +14,11 @@ The system is run entirely in two docker containers. One container runs the prox
 The proxy is written in Go (allowing multiple clients to concurrently connect to it and have their requests sequentially processed) but because the environment is containerized, you need have only docker, docker-compose, and a Bash terminal to run the code.
 
 ### Algorithmic complexity of the cache operations
-//////// DOUBLE-CHECK ME ///////
-getCVal retrieves the key's value from the local cache ==> Complexity: O(1)
-setCVal adds a key/value to the cache ==> Complexity: O(1)
+==========>>>>> **DOUBLE-CHECK ME** <<==========
+
+* getCVal retrieves the key's value from the local cache ==> Complexity: O(1)
+* setCVal adds a key/value to the cache ==> Complexity: O(1)
+
 ### How to run the proxy and tests
 
 #### Getting started (Single-click build and test)
@@ -72,18 +74,13 @@ Open a terminal session and run:
 * Single-click build and test (1hr)
 * LRU eviction and fixed key size (30 min)
 * Global expiry (30 min)
-* Documentation (3 hrs) 
+* Documentation (3 hrs)
 
 #### A list of the requirements that you did not implement and the reasons for omitting them.
 * Sequential concurrent processing (Confused about setting max connections on server)
 * Parallel concurrent processing (Ran out of time)
 * Redis client protocol (Ran out of time)
 
-
-
-
-
- <!-- TODO -->
 Sequential concurrent processing
 Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
 
