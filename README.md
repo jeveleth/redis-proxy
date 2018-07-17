@@ -5,6 +5,7 @@
 
 ### What the code does
 The code spins up an HTTP proxy that runs a read-through cache and connects to a single-instance "backing Redis."
+
 A GET request to the proxy returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. Otherwise, the proxy fetches the value from Redis, via the Redis GET command, and stores it in the local cache, associated with the specified key. If the key/value cannot be found, the proxy returns an empty string.
 
 Any writes to the Redis instance bypass the proxy. In this case, you need to open an interactive Redis session (see **Session 3** below) to write to Redis.
@@ -78,19 +79,17 @@ Open a terminal session and run:
 
 #### A list of the requirements that you did not implement and the reasons for omitting them.
 * Sequential concurrent processing (Confused about setting max connections on server)
-* Parallel concurrent processing (Ran out of time)
-* Redis client protocol (Ran out of time)
 
-Sequential concurrent processing
-Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
+        Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
 
+* Bonus Requirements (Ran out of time)
 
-Bonus Requirements
-The requirements below add some additional complexity to the design and can be implemented as a bonus. However, we strongly encourage candidates who are applying for a role which has a strong backend systems focus to implement these as well.
+        The requirements below add some additional complexity to the design and can be implemented as a bonus. However, we strongly encourage candidates who are applying for a role which has a strong backend systems focus to implement these as well.
 
-Parallel concurrent processing
-Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely
-impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it would execute a number of these requests (up to some configurable limit) in parallel (i.e. in a way so that one request does not have to wait for another one to complete before it starts processing).
+* Parallel concurrent processing
 
-Redis client protocol
-Clients interface to the Redis proxy through a subset of the Redis protocol (as opposed to using the HTTP protocol). The proxy should implement the parts of the Redis protocol that is required to meet this specification.
+        Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit)without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it would execute a number of these requests (up to some configurable limit) in parallel (i.e. in a way so that one request does not have to wait for another one to complete before it starts processing).
+
+* Redis client protocol
+
+        Clients interface to the Redis proxy through a subset of the Redis protocol (as opposed to using the HTTP protocol). The proxy should implement the parts of the Redis protocol that is required to meet this specification.
