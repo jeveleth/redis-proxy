@@ -1,54 +1,68 @@
 # redis-proxy
 
+### High-level architecture overview
+<!-- TODO: Add chart -->
+### What the code does
+<!-- TODO: -->
+### Algorithmic complexity of the cache operations
+<!-- TODO: -->
+### Instructions for how to run the proxy and tests
 
-Documentation
-## High-level architecture overview.
-<!-- TODO: -->
-## What the code does.
-<!-- TODO: -->
-## Algorithmic complexity of the cache operations.
-<!-- TODO: -->
-## Instructions for how to run the proxy and tests.
-<!-- TODO: -->
-## How long you spent on each part of the project.
-    * HTTP web service (1 hr)
-    * Single backing instance (2 hrs)
-    * Cached GET (2 hrs)
-    * System tests (3 hrs)
-    * Platform (2 hrs)
-    * Single-click build and test (1hr)
-    * Documentation ()
-    * LRU eviction and fixed key size ()
-
-## A list of the requirements that you did not implement and the reasons for omitting them.
-    * Global expiry
-    * Sequential concurrent processing
-    * Parallel concurrent processing
-    * Redis client protocol
-
-## Getting started
+#### Getting started
 To build and test, according to the ```Single-click build and test``` requirement. Open a terminal session and run:
 
     git clone git@github.com:jeveleth/redis-proxy.git
+    cd redis-proxy
     make test # This builds the proxy and runs the tests
 
-# Running your own proxy
+#### Running your own proxy
+(This assumes you have cloned the repo and are in the top-level directory of the project.)
+
  Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Then run ```./proxy -help```, to see what you can configure. To run the proxy, run ```./proxy``` with any optional flags.
 
- As an example you can test the service by doing the following (all within the root directory of the project):
-  1. (Session 1) Open one terminal session and run: ```make docker-proxy```. Once inside the bash prompt, run ```./proxy -proxy-port 9000```.
-  2. (Session 2) Open a separate terminal session and run:
-        ```make docker-proxy```
-        ```curl localhost:9000/getval/key22```
-    You should *not* see any value.
+ You can run the service by opening three terminal sessions and doing as follows:
+* (In **Session 1**) Run:
 
-  3. (Session 3) Open an separate terminal session and run ```make redis-cli```, which will drop you into an interactive session with the redis server. For this example, type ```set key22 value22```. Go back to session 2 and run the curl command again, like so: ```bash-4.4# curl localhost:9000/getval/key22```. You should see a response like: ```From Redis: key22 => value22bash-4.4#```. Run the curl command again, and you should see a response like ```From cache: key22 => value1bash-4.4```.
+        make docker-proxy
+        ./proxy -proxy-port 9000 # Once inside the bash prompt
 
-# Running the tests
+* (In **Session 2**) Run:
+
+        make docker-proxy
+        curl localhost:9000/getval/key22 # Once inside the bash prompt
+
+You should *not* see any value.
+
+* (In **Session 3**) Run: 
+    
+        make redis-cli # drops you into an interactive session with the redis server.
+        set key22 value22. # sets a value in redis server.
+ 
+Go back to **Session 2**. Run the curl command twice and see a response first from Redis, then from the local cache.
+
+    curl localhost:9000/getval/key22 #Run this.
+    From Redis: key22 => value22. #Proxy responds with value from redis 
+    curl localhost:9000/getval/key22 # Run this.
+    From cache: key22 => value1.  # Proxy responds with value from cache
+
+#### Running the tests
 Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Run ```go test -v```.
 
+### How long you spent on each part of the project.
+* HTTP web service (1 hr)
+* Single backing instance (2 hrs)
+* Cached GET (2 hrs)
+* System tests (3 hrs)
+* Platform (2 hrs)
+* Single-click build and test (1hr)
+* LRU eviction and fixed key size (30 min)
+* Global expiry (30 min)
+* Documentation ()   <!-- TODO: Time estimate -->
 
-
+#### A list of the requirements that you did not implement and the reasons for omitting them.
+    * Sequential concurrent processing (Confused about setting max connections on server)
+    * Parallel concurrent processing (Ran out of time)
+    * Redis client protocol (Ran out of time)
 
  <!-- TODO -->
 Sequential concurrent processing
