@@ -1,7 +1,7 @@
 # redis-proxy
 
 ### High-level architecture overview
-![alt text](https://raw.githubusercontent.com/jeveleth/redis-proxy/master/ProxyArchitecture.png "Proxy Architecture")
+![alt text](ProxyArchitecture.png "Proxy Architecture")
 
 ### What the code does
 The code spins up an HTTP proxy that runs a read-through cache and connects to a single-instance "backing Redis." 
