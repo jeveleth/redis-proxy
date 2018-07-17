@@ -52,7 +52,6 @@ func (c *cache) getCVal(key string) (interface{}, string) {
 		result := peek.(valWithTTL)
 		// If createdAt of value is older than TTL, remove key and return nil
 		if time.Since(result.CreatedAt) > result.TTL {
-			log.Printf("TTL %v exceeded. Purging key %v\n", result.TTL, time.Since(result.CreatedAt))
 			c.client.Remove(key)
 			return nil, ""
 		}

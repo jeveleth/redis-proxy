@@ -13,7 +13,9 @@ docker-proxy: local-redis
 	docker-compose up -d
 	docker exec -it redis-proxy_proxy_1 bash
 
-cleanup:
+# Clean up all of your docker images.
+# Be careful if you have non redis-proxy images/containers that you want to keep
+nuclear:
 	docker-compose down
 	docker system prune -f
 	docker volume prune -f

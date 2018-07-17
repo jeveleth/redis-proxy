@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -71,7 +72,6 @@ func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 
 func TestGetValueFromLocalCacheSuccess(t *testing.T) {
 	setupKeysInCache(t)
-
 	nt := []struct {
 		routeKey string
 		routeVal string
@@ -101,6 +101,34 @@ func TestGetValueFromLocalCacheSuccess(t *testing.T) {
 	tearDownCache()
 }
 
+func TestCacheEmptyWithShortTTL(t *testing.T) {
+	testCache := newCache(50)
+	m, _ := time.ParseDuration("5s")
+	testVal := valWithTTL{
+		Value:     "testVal1",
+		TTL:       m,
+		CreatedAt: time.Now().AddDate(0, -1, 0)}
+
+	nt := []struct {
+		routeKey string
+		routeVal interface{}
+	}{
+		{"testKey1", testVal},
+		{"testKey2", testVal},
+		{"testKey3", testVal},
+		{"testKey4", testVal},
+	}
+	for _, tc := range nt {
+		testCache.client.Add(tc.routeKey, tc.routeVal)
+		result, _ := testCache.getCVal(tc.routeKey)
+		actual := result
+		if actual != nil {
+			t.Errorf("handler returned unexpected body: got %v want %v", actual, "foo")
+		}
+	}
+	tearDownRedis()
+	tearDownCache()
+}
 func TestCacheEvictsWithLRU(t *testing.T) {
 	testCache := newCache(5)
 	nt := []struct {
