@@ -1,7 +1,8 @@
 # redis-proxy
 
 ### High-level architecture overview
-<!-- TODO: Add chart -->
+![alt text](https://raw.githubusercontent.com/jeveleth/redis-proxy/master/ProxyArchitecture.png "Proxy Architecture")
+
 ### What the code does
 The code spins up an HTTP proxy that runs a read-through cache and connects to a single-instance "backing Redis." 
 A GET request to the proxy returns the value of the specified key from the proxy’s local cache if the local cache contains a value for that key. Otherwise, the proxy fetches the value from Redis, via the Redis GET command, and stores it in the local cache, associated with the specified key. If the key/value cannot be found, the proxy returns an empty string.
