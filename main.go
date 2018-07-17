@@ -15,6 +15,8 @@ var thisConfig = MustLoadConfig()
 var cacheExpiryTime = thisConfig.CacheExpiryTime
 var proxyPort = thisConfig.ProxyPort
 
+// var maxConnections = thisConfig.MaxConnections
+
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)

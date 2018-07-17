@@ -151,6 +151,7 @@ func tearDownRedis() {
 
 // TODO: Test that getting value:
 // --> evicts a key with expiry time
+// ./proxy -redis-addr localhost:6379 -cache-capacity 2 -cache-expiry-time 1s
 // --> Fixed key size
 // 	Sequential concurrent processing
 // 	Configuration

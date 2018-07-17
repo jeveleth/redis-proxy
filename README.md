@@ -21,32 +21,34 @@ To build and test, according to the ```Single-click build and test``` requiremen
  Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Then run ```./proxy -help```, to see what you can configure. To run the proxy, run ```./proxy``` with any optional flags.
 
  You can run the service by opening three terminal sessions and doing as follows:
-* (In **Session 1**) Run:
+* (In **Session 1**)
 
         make docker-proxy
         ./proxy -proxy-port 9000 # Once inside the bash prompt
 
-* (In **Session 2**) Run:
+* (In **Session 2**)
 
         make docker-proxy
         curl localhost:9000/getval/key22 # Once inside the bash prompt
 
-You should *not* see any value.
+    You should *not* see any value.
 
-* (In **Session 3**) Run: 
-    
-        make redis-cli # drops you into an interactive session with the redis server.
+* (In **Session 3**)
+
+        make redis-cli # start interactive session with the redis server.
         set key22 value22. # sets a value in redis server.
- 
-Go back to **Session 2**. Run the curl command twice and see a response first from Redis, then from the local cache.
 
-    curl localhost:9000/getval/key22 #Run this.
-    From Redis: key22 => value22. #Proxy responds with value from redis 
-    curl localhost:9000/getval/key22 # Run this.
-    From cache: key22 => value1.  # Proxy responds with value from cache
+    Go back to **Session 2**. Run the curl command twice and see a response first from Redis, then from the local cache.
+
+        curl localhost:9000/getval/key22 # Run this.
+        From Redis: key22 => value22. # Proxy responds with value from redis
+        curl localhost:9000/getval/key22 # Run this.
+        From cache: key22 => value1.  # Proxy responds with value from cache
 
 #### Running the tests
-Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Run ```go test -v```.
+
+        make docker-proxy # start interactive session with proxy container.
+        go test -v # run the tests.
 
 ### How long you spent on each part of the project.
 * HTTP web service (1 hr)
@@ -60,9 +62,13 @@ Run ```make docker-proxy```, which will put you in an interactive docker contain
 * Documentation ()   <!-- TODO: Time estimate -->
 
 #### A list of the requirements that you did not implement and the reasons for omitting them.
-    * Sequential concurrent processing (Confused about setting max connections on server)
-    * Parallel concurrent processing (Ran out of time)
-    * Redis client protocol (Ran out of time)
+* Sequential concurrent processing (Confused about setting max connections on server)
+* Parallel concurrent processing (Ran out of time)
+* Redis client protocol (Ran out of time)
+
+
+
+
 
  <!-- TODO -->
 Sequential concurrent processing
@@ -70,7 +76,6 @@ Multiple clients are able to concurrently connect to the proxy (up to some confi
 
 
 Bonus Requirements
-
 The requirements below add some additional complexity to the design and can be implemented as a bonus. However, we strongly encourage candidates who are applying for a role which has a strong backend systems focus to implement these as well.
 
 Parallel concurrent processing

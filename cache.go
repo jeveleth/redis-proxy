@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/hashicorp/golang-lru"
 )
@@ -19,12 +20,20 @@ import (
 // Fixed key size
 // The cache capacity is configured in terms of number of keys it retains.
 
+// cache is a wrapper around hashicorp's lru caching library
 type cache struct {
 	client *lru.Cache
 }
 
+// value to be set in local cache with key
+type valWithTTL struct {
+	Value     string
+	TTL       time.Duration
+	CreatedAt time.Time
+}
+
+// newCache instantiates a new LRU cache
 func newCache(cacheCapacity int) *cache {
-	// TODO: Error handling
 	l, err := lru.New(cacheCapacity)
 	if err != nil {
 		log.Printf("Error creating cache client. Error is: %v.", err)
@@ -32,16 +41,28 @@ func newCache(cacheCapacity int) *cache {
 	return &cache{client: l}
 }
 
-// getCVal retrieves the key's value from the local cache.
+// getCVal retrieves the key's value from the local cache
 func (c *cache) getCVal(key string) (interface{}, string) {
+
 	res, ok := c.client.Get(key)
+
 	if ok == true {
+		// Peek retrieves the key without altering its LRU state
+		peek, _ := c.client.Peek(key)
+		result := peek.(valWithTTL)
+		// If createdAt of value is older than TTL, remove key and return nil
+		if time.Since(result.CreatedAt) > result.TTL {
+			log.Printf("TTL %v exceeded. Purging key %v\n", result.TTL, time.Since(result.CreatedAt))
+			c.client.Remove(key)
+			return nil, ""
+		}
 		return res, ""
 	}
 	return nil, ""
 }
 
+// setCVal adds a key/value to the cache, associating a TTL and createdAt time with the value
 func (c *cache) setCVal(key string, val string) {
-	c.client.Add(key, val)
-	// TODO: mutex me
+	storeVal := valWithTTL{Value: val, TTL: thisConfig.CacheExpiryTime, CreatedAt: time.Now()}
+	c.client.Add(key, storeVal)
 }
