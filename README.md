@@ -13,37 +13,39 @@ To build and test, according to the ```Single-click build and test``` requiremen
 
     git clone git@github.com:jeveleth/redis-proxy.git
     cd redis-proxy
-    make test # This builds the proxy and runs the tests
+    make test # Build the proxy and run the tests
 
 #### Running your own proxy
 (This assumes you have cloned the repo and are in the top-level directory of the project.)
 
- Run ```make docker-proxy```, which will put you in an interactive docker container with access to the proxy server. Then run ```./proxy -help```, to see what you can configure. To run the proxy, run ```./proxy``` with any optional flags.
+        make docker-proxy # Start interactive session with proxy docker container
+        ./proxy -help     # Returns configurable flags
+        ./proxy           # To run the proxy (flags are optional)
 
  You can run the service by opening three terminal sessions and doing as follows:
 * (In **Session 1**)
 
-        make docker-proxy
-        ./proxy -proxy-port 9000 # Once inside the bash prompt
+        make docker-proxy         # Start interactive session with proxy docker container
+        ./proxy -proxy-port 9000  # Run proxy on port 9000
 
 * (In **Session 2**)
 
-        make docker-proxy
-        curl localhost:9000/getval/key22 # Once inside the bash prompt
+        make docker-proxy                # Start interactive session with proxy docker container
+        curl localhost:9000/getval/key22 # Get the value (if any) for key22
 
     You should *not* see any value.
 
 * (In **Session 3**)
 
-        make redis-cli # start interactive session with the redis server.
-        set key22 value22. # sets a value in redis server.
+        make redis-cli     # Start interactive session with the redis server.
+        set key22 value22. # Set a value in redis server.
 
     Go back to **Session 2**. Run the curl command twice and see a response first from Redis, then from the local cache.
 
-        curl localhost:9000/getval/key22 # Run this.
-        From Redis: key22 => value22. # Proxy responds with value from redis
-        curl localhost:9000/getval/key22 # Run this.
-        From cache: key22 => value1.  # Proxy responds with value from cache
+        curl localhost:9000/getval/key22  # Run this.
+        From Redis: key22 => value22.     # Proxy responds with value from redis
+        curl localhost:9000/getval/key22  # Run this.
+        From cache: key22 => value1.      # Proxy responds with value from cache
 
 #### Running the tests
 
