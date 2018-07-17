@@ -45,10 +45,10 @@ func newCache(cacheCapacity int) *cache {
 func (c *cache) getCVal(key string) (interface{}, string) {
 
 	res, ok := c.client.Get(key)
-
 	if ok == true {
 		// Peek retrieves the key without altering its LRU state
 		peek, _ := c.client.Peek(key)
+
 		result := peek.(valWithTTL)
 		// If createdAt of value is older than TTL, remove key and return nil
 		if time.Since(result.CreatedAt) > result.TTL {
@@ -65,4 +65,5 @@ func (c *cache) getCVal(key string) (interface{}, string) {
 func (c *cache) setCVal(key string, val string) {
 	storeVal := valWithTTL{Value: val, TTL: thisConfig.CacheExpiryTime, CreatedAt: time.Now()}
 	c.client.Add(key, storeVal)
+
 }

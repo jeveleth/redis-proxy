@@ -21,11 +21,12 @@ func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	val, _ := localCache.getCVal(vars["key"])
+
 	// If local cache has the key, return value
 	// Otherwise call Redis
 	switch v := val.(type) {
-	case string:
-		w.Write([]byte(fmt.Sprintf("From cache: %v => %v", vars["key"], v)))
+	case valWithTTL:
+		w.Write([]byte(fmt.Sprintf("From cache: %v => %v", vars["key"], v.Value)))
 	case nil:
 		val, err := myRedisClient.getRVal(vars["key"])
 		if err != nil {
