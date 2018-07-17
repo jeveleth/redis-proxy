@@ -6,12 +6,6 @@ import (
 	"github.com/hashicorp/golang-lru"
 )
 
-// A GET request, directed at the proxy, returns the value of the specified key
-// from the proxy’s local cache if the local cache contains a value for that key.
-//  If the local cache does not contain a value for the specified key,
-//  it fetches the value from the backing Redis instance, using the Redis GET command,
-// and stores it in the local cache, associated with the specified key.
-
 // Global expiry
 // Entries added to the proxy cache are expired after being in the cache for a time duration that is
 // globally configured (per instance).

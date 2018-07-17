@@ -1,6 +1,3 @@
-// TODO: Initialize a struct that the functions act on so they don't have to pass in the client each time
-// TODO: restrict getter to HTTP GET Method
-
 package main
 
 import (
