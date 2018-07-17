@@ -35,7 +35,6 @@ func TestHandlerWelcomeMessage(t *testing.T) {
 	tearDownRedis()
 	tearDownCache()
 }
-
 func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 	tt := []struct {
 		routeKey string
@@ -107,7 +106,7 @@ func TestCacheEmptyWithShortTTL(t *testing.T) {
 	testVal := valWithTTL{
 		Value:     "testVal1",
 		TTL:       m,
-		CreatedAt: time.Now().AddDate(0, -1, 0)}
+		CreatedAt: time.Now().Add(time.Second * -30)}
 
 	nt := []struct {
 		routeKey string
@@ -123,7 +122,7 @@ func TestCacheEmptyWithShortTTL(t *testing.T) {
 		result, _ := testCache.getCVal(tc.routeKey)
 		actual := result
 		if actual != nil {
-			t.Errorf("handler returned unexpected body: got %v want %v", actual, "foo")
+			t.Errorf("handler returned unexpected body: got %v want nil", actual)
 		}
 	}
 	tearDownRedis()
@@ -178,8 +177,6 @@ func tearDownRedis() {
 }
 
 // TODO: Test that getting value:
-// --> evicts a key with expiry time
-// ./proxy -redis-addr localhost:6379 -cache-capacity 2 -cache-expiry-time 1s
 // --> Fixed key size
 // 	Sequential concurrent processing
 // 	Configuration
