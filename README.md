@@ -50,7 +50,7 @@ Open a terminal session and run:
 * (In **Session 3**)
 
         make redis-cli     # Start interactive session with the redis server.
-        set key22 value22. # Set a value in redis server.
+        set key22 value22 # Set a value in redis server.
 
     Go back to **Session 2**. Run the curl command twice and see a response first from Redis, then from the local cache.
 
@@ -64,7 +64,7 @@ Open a terminal session and run:
         make docker-proxy # start interactive session with proxy container.
         go test -v # run the tests.
 
-### How long you spent on each part of the project.
+### How long I spent on each part of the project.
 * HTTP web service (2 hr)
 * Single backing instance (2 hrs)
 * Cached GET (2 hrs)
@@ -76,7 +76,7 @@ Open a terminal session and run:
 * Documentation (3 hrs)
 * Sequential concurrent processing (3 hrs)
 
-#### A list of the requirements that you did not implement and the reasons for omitting them.
+#### A list of the requirements I did not implement.
 ** System test for testing max connections.
 I'm able confirm sequential concurrency manually by doing the following in three sessions, but haven't figured out a way to do so in a clean automated fashion.
 
