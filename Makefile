@@ -1,17 +1,21 @@
-test: local-redis
-	docker build .
+build:
+	docker-compose build
 
-local-redis:
+run: build
+	docker-compose up -d
+
+test: run
+	docker exec proxy go test -v
+
+local-redis: build
 	docker-compose up -d redis
 
-docker-proxy-config:
-	docker-compose up -d
-	docker exec -it redis-proxy_proxy_1 ./proxy -help
+docker-proxy-config: run
+	docker exec proxy ./proxy -help
 
 # To enter an interactive environment with Go
-docker-proxy: local-redis
-	docker-compose up -d
-	docker exec -it redis-proxy_proxy_1 bash
+docker-proxy: run
+	docker exec -it proxy bash
 
 # Clean up all of your docker images.
 # Be careful if you have non redis-proxy images/containers that you want to keep
@@ -24,4 +28,4 @@ nuclear:
 	docker images -a
 
 redis-cli: local-redis
-	docker exec -it redis-proxy_redis_1 redis-cli
+	docker exec -it redis redis-cli

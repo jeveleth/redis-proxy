@@ -11,8 +11,8 @@ import (
 )
 
 var thisConfig = MustLoadConfig()
-var localCache = newCache(thisConfig.CacheCapacity)      // TODO: Make this not global
-var myRedisClient = newRedisClient(thisConfig.RedisAddr) // TODO: Make this not global
+var localCache = newCache(thisConfig.CacheCapacity)
+var myRedisClient = newRedisClient(thisConfig.RedisAddr)
 
 func getRoutes() *mux.Router {
 	r := mux.NewRouter()

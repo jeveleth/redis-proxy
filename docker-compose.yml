@@ -2,6 +2,7 @@ version: '3'
 services:
   proxy:
     build: .
+    container_name: proxy
     ports:
     - "8080:8080"
     environment:
@@ -11,5 +12,6 @@ services:
      - redis
   redis:
     image: "redis:alpine"
+    container_name: redis
     ports:
     - "6379:6379"

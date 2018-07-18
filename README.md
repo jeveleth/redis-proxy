@@ -15,8 +15,6 @@ The system is run entirely in two docker containers. One container runs the prox
 The proxy is written in Go (allowing multiple clients to concurrently connect to it and have their requests sequentially processed) but because the environment is containerized, you need have only docker, docker-compose, and a Bash terminal to run the code.
 
 ### Algorithmic complexity of the cache operations
-==========>>>>> **DOUBLE-CHECK ME** <<==========
-
 * getCVal retrieves the key's value from the local cache ==> Complexity: O(1)
 * setCVal adds a key/value to the cache ==> Complexity: O(1)
 
@@ -70,23 +68,26 @@ Open a terminal session and run:
 * HTTP web service (2 hr)
 * Single backing instance (2 hrs)
 * Cached GET (2 hrs)
-* System tests (5 hrs)
+* System tests (5 hrs)**
 * Platform (2 hrs)
 * Single-click build and test (2 hrs)
 * LRU eviction and fixed key size (1 hr)
 * Global expiry (1 hr)
 * Documentation (3 hrs)
-* Sequential concurrent processing (3 hrs) **TODO: Test for this**
+* Sequential concurrent processing (3 hrs)
+
 #### A list of the requirements that you did not implement and the reasons for omitting them.
+** System test for testing max connections.
+I'm able confirm sequential concurrency manually by doing the following in three sessions, but haven't figured out a way to do so in a clean automated fashion.
 
-* Bonus Requirements (Ran out of time)
+        make docker-proxy # Session 1
+        make docker-proxy # Session 2
+        make docker-proxy # Session 3
 
-        The requirements below add some additional complexity to the design and can be implemented as a bonus. However, we strongly encourage candidates who are applying for a role which has a strong backend systems focus to implement these as well.
+        ./proxy -proxy-port 9000 -max-conn 1  # Session 1
+        watch curl localhost:9000/getval/key1 # Session 2
+        watch curl localhost:9000/getval/key2 # Session 3
 
-* Parallel concurrent processing
 
-        Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit)without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it would execute a number of these requests (up to some configurable limit) in parallel (i.e. in a way so that one request does not have to wait for another one to complete before it starts processing).
-
-* Redis client protocol
-
-        Clients interface to the Redis proxy through a subset of the Redis protocol (as opposed to using the HTTP protocol). The proxy should implement the parts of the Redis protocol that is required to meet this specification.
+* Parallel concurrent processing (Ran out of time)
+* Redis client protocol (Ran out of time)
