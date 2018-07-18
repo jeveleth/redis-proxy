@@ -35,6 +35,31 @@ func TestHandlerWelcomeMessage(t *testing.T) {
 	tearDownRedis()
 	tearDownCache()
 }
+
+func TestHandlerAcceptsMaxConnections(t *testing.T) {
+	req, err := http.NewRequest("GET", "", nil)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+
+	hf := http.HandlerFunc(HomeHandler)
+	// newServer := httptest.NewServer(hf)
+
+	hf.ServeHTTP(rr, req)
+
+	// // set MaxConnections to 5
+	// // open 10 connections
+	// rr := httptest.NewRecorder()
+	// hf := http.HandlerFunc(HomeHandler)
+	// for index := 0; index < 150; index++ {
+	// 	hf.ServeHTTP(rr, req)
+	// }
+
+}
+
 func TestGetValueFromRedisWhenLocalCacheEmpty(t *testing.T) {
 	tt := []struct {
 		routeKey string
@@ -175,10 +200,3 @@ func tearDownCache() {
 func tearDownRedis() {
 	myRedisClient.client.FlushDB()
 }
-
-// TODO: Test that getting value:
-// --> Fixed key size
-// 	Sequential concurrent processing
-// 	Configuration
-// 	Parallel concurrent processing
-// 	Redis client protocol # ran out of time

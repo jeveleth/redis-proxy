@@ -19,7 +19,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // storing it in the local cache, associated with the specified key.
 func GetValueFromKeyHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
 	val, _ := localCache.getCVal(vars["key"])
 
 	// If local cache has the key, return value

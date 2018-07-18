@@ -10,7 +10,7 @@ type Config struct {
 	CacheExpiryTime time.Duration
 	CacheCapacity   int
 	ProxyPort       int
-	// MaxConnections  int
+	MaxConnections  int
 }
 
 func MustLoadConfig() Config {
@@ -19,7 +19,7 @@ func MustLoadConfig() Config {
 	flag.DurationVar(&config.CacheExpiryTime, "cache-expiry-time", time.Minute, "Cache expiry time")
 	flag.IntVar(&config.CacheCapacity, "cache-capacity", 1000, "Capacity (number of keys)")
 	flag.IntVar(&config.ProxyPort, "proxy-port", 8080, "TCP/IP port number the proxy listens on")
-	// flag.IntVar(&config.MaxConnections, "max-conn", 8080, "Maximum limit of connections to proxy")
+	flag.IntVar(&config.MaxConnections, "max-conn", 1, "Maximum limit of connections to proxy")
 	flag.Parse()
 	return config
 }

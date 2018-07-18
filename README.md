@@ -67,20 +67,17 @@ Open a terminal session and run:
         go test -v # run the tests.
 
 ### How long you spent on each part of the project.
-* HTTP web service (1 hr)
+* HTTP web service (2 hr)
 * Single backing instance (2 hrs)
 * Cached GET (2 hrs)
-* System tests (3 hrs)
+* System tests (5 hrs)
 * Platform (2 hrs)
-* Single-click build and test (1hr)
-* LRU eviction and fixed key size (30 min)
-* Global expiry (30 min)
+* Single-click build and test (2 hrs)
+* LRU eviction and fixed key size (1 hr)
+* Global expiry (1 hr)
 * Documentation (3 hrs)
-
+* Sequential concurrent processing (3 hrs) **TODO: Test for this**
 #### A list of the requirements that you did not implement and the reasons for omitting them.
-* Sequential concurrent processing (Confused about setting max connections on server)
-
-        Multiple clients are able to concurrently connect to the proxy (up to some configurable maximum limit) without adversely impacting the functional behaviour of the proxy. When multiple clients make concurrent requests to the proxy, it is acceptable for them to be processed sequentially (i.e. a request from the second only starts processing after the first request has completed and a response has been returned to the first client).
 
 * Bonus Requirements (Ran out of time)
 
