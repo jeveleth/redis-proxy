@@ -2,6 +2,7 @@
 
 
 [[projects]]
+  digest = "1:d8180cdf086f729ae7c0c995194788c5578aed12cc49dd4673702b2b4073ca1f"
   name = "github.com/go-redis/redis"
   packages = [
     ".",
@@ -11,35 +12,55 @@
     "internal/pool",
     "internal/proto",
     "internal/singleflight",
-    "internal/util"
+    "internal/util",
   ]
+  pruneopts = "UT"
   revision = "83fb42932f6145ce52df09860384a4653d2d332a"
   version = "v6.12.0"
 
 [[projects]]
+  digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
+  pruneopts = "UT"
   revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:e73f5b0152105f18bc131fba127d9949305c8693f8a762588a82a48f61756f5f"
   name = "github.com/gorilla/mux"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
   version = "v1.6.2"
 
 [[projects]]
   branch = "master"
+  digest = "1:cf296baa185baae04a9a7004efee8511d08e2f5f51d4cbe5375da89722d681db"
   name = "github.com/hashicorp/golang-lru"
   packages = [
     ".",
-    "simplelru"
+    "simplelru",
   ]
+  pruneopts = "UT"
   revision = "0fb14efe8c47ae851c0034ed7a448854d3d34cf3"
+
+[[projects]]
+  branch = "master"
+  digest = "1:cdc5b9609cc79914c06599e54de510eddd6e58bb69e555f19f2013fb38b859b1"
+  name = "golang.org/x/net"
+  packages = ["netutil"]
+  pruneopts = "UT"
+  revision = "16171245cfb220d5317888b716d69c1fb4e7992b"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cd664b1cc669edfc1a84d9ed2ee6e774af4713ce7b45bd723698dbb9f57a2db9"
+  input-imports = [
+    "github.com/go-redis/redis",
+    "github.com/gorilla/mux",
+    "github.com/hashicorp/golang-lru",
+    "golang.org/x/net/netutil",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
