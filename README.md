@@ -1,5 +1,7 @@
 # redis-proxy
 
+![Go](https://github.com/jeveleth/redis-proxy/workflows/Go/badge.svg?branch=master&event=push)
+
 ### High-level architecture overview
 ![alt text](ProxyArchitecture.png "Proxy Architecture")
 
