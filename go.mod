@@ -3,7 +3,7 @@ module github.com/jeveleth/redis-proxy
 go 1.13
 
 require (
-	github.com/go-redis/redis v6.12.0+incompatible
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/golang-lru v0.0.0-20180201235237-0fb14efe8c47
 	github.com/onsi/ginkgo v1.12.0 // indirect
