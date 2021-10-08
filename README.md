@@ -79,7 +79,7 @@ Open a terminal session and run:
 * Sequential concurrent processing (3 hrs)
 
 #### TODO
-** System test for testing max connections.
+* System test for testing max connections.
 I'm able confirm sequential concurrency manually by doing the following in three sessions, but haven't figured out a way to do so in a clean automated fashion.
 
         make docker-proxy # Session 1
