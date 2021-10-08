@@ -78,7 +78,7 @@ Open a terminal session and run:
 * Documentation (3 hrs)
 * Sequential concurrent processing (3 hrs)
 
-#### A list of the requirements I did not implement.
+#### TODO
 ** System test for testing max connections.
 I'm able confirm sequential concurrency manually by doing the following in three sessions, but haven't figured out a way to do so in a clean automated fashion.
 
@@ -91,5 +91,5 @@ I'm able confirm sequential concurrency manually by doing the following in three
         watch curl localhost:9000/getval/key2 # Session 3
 
 
-* Parallel concurrent processing (Ran out of time)
-* Redis client protocol (Ran out of time)
+* Parallel concurrent processing
+* Redis client protocol
